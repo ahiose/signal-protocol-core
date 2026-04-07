@@ -17,6 +17,10 @@
     <dependencies>
         <dependency>
             <groupId>com.opensignal</groupId>
+            <artifactId>protocol-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.opensignal</groupId>
             <artifactId>gb20999-core</artifactId>
         </dependency>
         <dependency>
