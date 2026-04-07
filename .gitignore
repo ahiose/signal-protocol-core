@@ -1,0 +1,13 @@
+target/
+*.iml
+.idea/
+*.class
+*.jar
+*.war
+*.log
+.DS_Store
+.settings/
+.classpath
+.project
+*.swp
+*~
