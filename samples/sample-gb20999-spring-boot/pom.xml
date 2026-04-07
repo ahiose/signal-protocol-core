@@ -20,6 +20,10 @@
         </dependency>
         <dependency>
             <groupId>com.opensignal</groupId>
+            <artifactId>gb20999-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.opensignal</groupId>
             <artifactId>vendor-keli</artifactId>
             <version>${project.version}</version>
         </dependency>

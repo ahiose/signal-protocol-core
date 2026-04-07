@@ -1,0 +1,11 @@
+gb20999:
+  enabled: true
+  client:
+    host: 127.0.0.1
+    port: 9000
+    vendor-id: keli
+    transport: TCP
+    heartbeat-interval-ms: 30000
+  server:
+    enabled: true
+    bind-port: 9000

@@ -35,7 +35,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <netty.version>4.1.108.Final</netty.version>
-        <spring-boot.version>3.2.5</spring-boot.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
         <slf4j.version>2.0.12</slf4j.version>
         <junit.version>5.10.2</junit.version>
         <lombok.version>1.18.32</lombok.version>

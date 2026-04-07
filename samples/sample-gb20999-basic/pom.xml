@@ -20,13 +20,17 @@
         </dependency>
         <dependency>
             <groupId>com.opensignal</groupId>
+            <artifactId>gb20999-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.opensignal</groupId>
             <artifactId>vendor-keli</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.14</version>
+            <version>1.2.13</version>
         </dependency>
     </dependencies>
 

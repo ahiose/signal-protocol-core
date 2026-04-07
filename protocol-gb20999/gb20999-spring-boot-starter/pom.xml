@@ -22,7 +22,6 @@
         <dependency>
             <groupId>com.opensignal</groupId>
             <artifactId>gb20999-server</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
