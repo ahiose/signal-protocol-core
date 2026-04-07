@@ -1,6 +1,8 @@
 package com.opensignal.protocol.gb20999.server;
 
 import com.opensignal.protocol.gb20999.netty.Gb20999ChannelInitializer;
+import com.opensignal.protocol.gb20999.server.handler.ServerRequestHandler;
+import com.opensignal.protocol.gb20999.server.handler.ServerTrapSender;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -16,6 +18,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class Gb20999Server implements AutoCloseable {
 
     private final Gb20999ServerConfig config;
+    private final MockSignalData mockData;
+    private final ServerTrapSender trapSender;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private Channel serverChannel;
@@ -30,6 +34,16 @@ public class Gb20999Server implements AutoCloseable {
 
     private Gb20999Server(Gb20999ServerConfig config) {
         this.config = config;
+        this.mockData = new MockSignalData();
+        this.trapSender = new ServerTrapSender(config);
+    }
+
+    public MockSignalData getMockData() {
+        return mockData;
+    }
+
+    public ServerTrapSender getTrapSender() {
+        return trapSender;
     }
 
     public void start() {
@@ -46,7 +60,7 @@ public class Gb20999Server implements AutoCloseable {
                         @Override
                         protected void initChannel(SocketChannel ch) {
                             Gb20999ChannelInitializer.initTcpPipeline(ch.pipeline());
-                            ch.pipeline().addLast(new MockGb20999ServerHandler());
+                            ch.pipeline().addLast(new ServerRequestHandler(config, mockData, trapSender));
                         }
                     });
             ChannelFuture bindFuture = bootstrap.bind(config.getBindHost(), config.getBindPort())
@@ -54,6 +68,10 @@ public class Gb20999Server implements AutoCloseable {
             serverChannel = bindFuture.channel();
             started = true;
         }
+    }
+
+    public void stop() {
+        close();
     }
 
     @Override

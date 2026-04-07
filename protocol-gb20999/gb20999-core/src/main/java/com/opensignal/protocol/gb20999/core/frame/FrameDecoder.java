@@ -4,6 +4,7 @@ import com.opensignal.protocol.common.exception.CodecException;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public final class FrameDecoder {
      * @param raw frame bytes without start/end markers, already unescaped
      */
     public static Frame decode(byte[] raw) {
-        if (raw.length < 14) {
+        if (raw.length < 13) {
             throw new CodecException("Frame too short: " + raw.length + " bytes");
         }
 
@@ -42,25 +43,30 @@ public final class FrameDecoder {
         int crossId = buf.get() & 0xFF;
         int sequence = buf.get() & 0xFF;
         FrameType frameType = FrameType.fromCode(buf.get() & 0xFF);
-        int dataValueCount = buf.get() & 0xFF;
 
-        List<DataValue> dataValues = new ArrayList<>(dataValueCount);
-        for (int i = 0; i < dataValueCount; i++) {
-            int dvIndex = buf.get() & 0xFF;
-            int dvLength = buf.get() & 0xFF;
-            int dataClassId = buf.get() & 0xFF;
-            int objectId = buf.get() & 0xFF;
-            int attributeId = buf.get() & 0xFF;
-            int elementId = buf.get() & 0xFF;
+        List<DataValue> dataValues;
+        if (frameType.hasDataValues()) {
+            int dataValueCount = buf.get() & 0xFF;
+            dataValues = new ArrayList<>(dataValueCount);
+            for (int i = 0; i < dataValueCount; i++) {
+                int dvIndex = buf.get() & 0xFF;
+                int dvLength = buf.get() & 0xFF;
+                int dataClassId = buf.get() & 0xFF;
+                int objectId = buf.get() & 0xFF;
+                int attributeId = buf.get() & 0xFF;
+                int elementId = buf.get() & 0xFF;
 
-            int dataLen = dvLength - 4;
-            byte[] data = null;
-            if (dataLen > 0) {
-                data = new byte[dataLen];
-                buf.get(data);
+                int dataLen = dvLength - 4;
+                byte[] data = null;
+                if (dataLen > 0) {
+                    data = new byte[dataLen];
+                    buf.get(data);
+                }
+
+                dataValues.add(new DataValue(dvIndex, dvLength, dataClassId, objectId, attributeId, elementId, data));
             }
-
-            dataValues.add(new DataValue(dvIndex, dvLength, dataClassId, objectId, attributeId, elementId, data));
+        } else {
+            dataValues = Collections.emptyList();
         }
 
         return Frame.builder()

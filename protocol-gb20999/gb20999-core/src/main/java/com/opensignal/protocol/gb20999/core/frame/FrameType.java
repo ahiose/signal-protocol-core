@@ -66,4 +66,11 @@ public enum FrameType {
     public boolean isHeartbeat() {
         return this == HEARTBEAT_QUERY || this == HEARTBEAT_REPLY;
     }
+
+    /**
+     * Per D.8/D.9 heartbeat frames have no "data value count" or data values.
+     */
+    public boolean hasDataValues() {
+        return !isHeartbeat();
+    }
 }

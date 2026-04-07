@@ -45,8 +45,7 @@ public class Gb20999Client implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Gb20999Client.class);
 
-    /** Per spec: commands use data class id 18. */
-    private static final int COMMAND_DATA_CLASS_ID = 18;
+    private static final int COMMAND_DATA_CLASS_ID = com.opensignal.protocol.gb20999.core.constant.DataClassId.COMMAND;
 
     private final Gb20999ClientConfig config;
     private final VendorProfile vendorProfile;

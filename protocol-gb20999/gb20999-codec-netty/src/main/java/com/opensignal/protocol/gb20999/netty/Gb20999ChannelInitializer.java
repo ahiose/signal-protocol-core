@@ -9,7 +9,6 @@ import java.net.InetSocketAddress;
  */
 public final class Gb20999ChannelInitializer {
 
-    private static final Gb20999FrameDecoder TCP_DECODER = new Gb20999FrameDecoder();
     private static final Gb20999FrameEncoder TCP_ENCODER = new Gb20999FrameEncoder();
     private static final Gb20999UdpFrameDecoder UDP_DECODER = new Gb20999UdpFrameDecoder();
 
@@ -18,9 +17,10 @@ public final class Gb20999ChannelInitializer {
 
     /**
      * Adds TCP frame decoder and encoder (escaped wire format).
+     * Decoder is per-channel (stateful cumulation buffer).
      */
     public static void initTcpPipeline(ChannelPipeline pipeline) {
-        pipeline.addLast("gb20999FrameDecoder", TCP_DECODER);
+        pipeline.addLast("gb20999FrameDecoder", new Gb20999FrameDecoder());
         pipeline.addLast("gb20999FrameEncoder", TCP_ENCODER);
     }
 

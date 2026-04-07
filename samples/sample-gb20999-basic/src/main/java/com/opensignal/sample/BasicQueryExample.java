@@ -50,9 +50,9 @@ public class BasicQueryExample {
             System.out.println("Query failed: " + e.getMessage());
         }
 
-        // 4. Query run status (DataClassId.CURRENT_STATUS)
+        // 4. Query run status (DataClassId.RUN_STATUS, data class 13)
         try {
-            Frame status = client.query(DataClassId.CURRENT_STATUS, 2);
+            Frame status = client.query(DataClassId.RUN_STATUS, 2);
             System.out.println("Run status response: type=" + status.getFrameType());
         } catch (Exception e) {
             System.out.println("Status query failed: " + e.getMessage());

@@ -5,7 +5,6 @@ import com.opensignal.protocol.gb20999.core.frame.EscapeCodec;
 import com.opensignal.protocol.gb20999.core.frame.Frame;
 import com.opensignal.protocol.gb20999.core.frame.FrameDecoder;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import org.slf4j.Logger;
@@ -15,8 +14,9 @@ import java.util.List;
 
 /**
  * TCP {@link ByteToMessageDecoder} for GB/T 20999 frames with start/end markers and escape rules.
+ *
+ * <p>{@link ByteToMessageDecoder} is stateful (cumulation buffer) and MUST NOT be shared across channels.
  */
-@ChannelHandler.Sharable
 public class Gb20999FrameDecoder extends ByteToMessageDecoder {
 
     private static final Logger LOG = LoggerFactory.getLogger(Gb20999FrameDecoder.class);

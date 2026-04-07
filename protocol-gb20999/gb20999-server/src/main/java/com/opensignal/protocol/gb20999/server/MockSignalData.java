@@ -113,7 +113,7 @@ public class MockSignalData {
      * Mock payload for data class 13 ({@link RunStatus} in model javadoc).
      */
     public byte[] getRunStatusData(int objectId, int attributeId) {
-        int cls = Gb20999ServerConfig.RUN_STATUS_DATA_CLASS_ID;
+        int cls = DataClassId.RUN_STATUS;
         if (objectId == 1) {
             byte[] status = new byte[20];
             status[0] = 0x00;
@@ -149,7 +149,7 @@ public class MockSignalData {
         byte[] copy = data == null ? new byte[0] : Arrays.copyOf(data, data.length);
         storedValues.put(storeKey(dataClassId, objectId), copy);
 
-        if (dataClassId == Gb20999ServerConfig.RUN_STATUS_DATA_CLASS_ID) {
+        if (dataClassId == DataClassId.RUN_STATUS) {
             applyRunStatusSet(objectId, copy);
         }
         return null;

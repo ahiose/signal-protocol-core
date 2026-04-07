@@ -115,7 +115,7 @@ public class ServerRequestHandler extends SimpleChannelInboundHandler<Frame> {
         if (dc == DataClassId.PHASE) {
             return mockData.getBasicInfoData(oid);
         }
-        if (dc == Gb20999ServerConfig.RUN_STATUS_DATA_CLASS_ID) {
+        if (dc == DataClassId.RUN_STATUS) {
             return mockData.getRunStatusData(oid, q.getAttributeId());
         }
         log.debug("No mock for query dataClassId={} objectId={}", dc, oid);

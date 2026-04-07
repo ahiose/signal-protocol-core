@@ -48,6 +48,7 @@ public final class FrameEncoder {
     private static byte[] encodeBody(Frame frame) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(64);
         DataOutputStream dos = new DataOutputStream(baos);
+        boolean hasDataValues = frame.getFrameType().hasDataValues();
 
         int bodyLength = calculateBodyLength(frame);
         dos.writeShort(bodyLength);
@@ -57,17 +58,19 @@ public final class FrameEncoder {
         dos.writeByte(frame.getCrossId());
         dos.writeByte(frame.getSequence());
         dos.writeByte(frame.getFrameType().code());
-        dos.writeByte(frame.dataValueCount());
 
-        for (DataValue dv : frame.getDataValues()) {
-            dos.writeByte(dv.getIndex());
-            dos.writeByte(dv.wireLength());
-            dos.writeByte(dv.getDataClassId());
-            dos.writeByte(dv.getObjectId());
-            dos.writeByte(dv.getAttributeId());
-            dos.writeByte(dv.getElementId());
-            if (dv.hasData()) {
-                dos.write(dv.getData());
+        if (hasDataValues) {
+            dos.writeByte(frame.dataValueCount());
+            for (DataValue dv : frame.getDataValues()) {
+                dos.writeByte(dv.getIndex());
+                dos.writeByte(dv.wireLength());
+                dos.writeByte(dv.getDataClassId());
+                dos.writeByte(dv.getObjectId());
+                dos.writeByte(dv.getAttributeId());
+                dos.writeByte(dv.getElementId());
+                if (dv.hasData()) {
+                    dos.write(dv.getData());
+                }
             }
         }
 
@@ -76,7 +79,11 @@ public final class FrameEncoder {
     }
 
     private static int calculateBodyLength(Frame frame) {
-        int headerLen = 2 + 1 + 4 + 1 + 1 + 1 + 1; // version(2)+upperId(1)+signalId(4)+crossId(1)+seq(1)+type(1)+count(1)
+        int headerLen = 2 + 1 + 4 + 1 + 1 + 1; // version(2)+upperId(1)+signalId(4)+crossId(1)+seq(1)+type(1)
+        if (!frame.getFrameType().hasDataValues()) {
+            return headerLen;
+        }
+        headerLen += 1; // count(1)
         int dvLen = 0;
         for (DataValue dv : frame.getDataValues()) {
             dvLen += 2 + dv.wireLength(); // index(1) + length(1) + wireLength

@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.opensignal.protocol.gb20999.spring.Gb20999AutoConfiguration

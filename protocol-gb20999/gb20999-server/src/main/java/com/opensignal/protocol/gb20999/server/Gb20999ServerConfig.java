@@ -10,9 +10,6 @@ import lombok.Data;
 @Builder
 public class Gb20999ServerConfig {
 
-    /** Matches model {@code RunStatus} (运行状态, class id 13 in project model javadoc). */
-    public static final int RUN_STATUS_DATA_CLASS_ID = 13;
-
     @Builder.Default
     private int bindPort = 9000;
 

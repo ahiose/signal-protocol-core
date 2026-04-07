@@ -41,7 +41,7 @@ public class ServerTrapSender {
     }
 
     /**
-     * Sends a minimal alarm-style TRAP using data class {@link DataClassId#CURRENT_STATUS} (15) / {@code AlarmData} model id.
+     * Sends a minimal alarm-style TRAP using data class 15 (ALARM).
      */
     public void sendAlarmTrap(int alarmType, int alarmValue) {
         byte[] payload = new byte[4];
@@ -50,7 +50,7 @@ public class ServerTrapSender {
         payload[2] = (byte) ((alarmValue >> 8) & 0xFF);
         payload[3] = (byte) (alarmValue & 0xFF);
 
-        DataValue dv = DataValue.of(1, DataClassId.CURRENT_STATUS, 1, 0, 0, payload);
+        DataValue dv = DataValue.of(1, DataClassId.ALARM, 1, 0, 0, payload);
         List<DataValue> list = new ArrayList<DataValue>(1);
         list.add(dv);
 

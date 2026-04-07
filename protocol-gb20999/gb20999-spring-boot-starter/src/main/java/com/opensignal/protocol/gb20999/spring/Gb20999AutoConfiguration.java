@@ -4,6 +4,8 @@ import com.opensignal.protocol.gb20999.client.Gb20999Client;
 import com.opensignal.protocol.gb20999.client.Gb20999ClientConfig;
 import com.opensignal.protocol.gb20999.server.Gb20999Server;
 import com.opensignal.protocol.gb20999.server.Gb20999ServerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,6 +21,8 @@ import java.net.InetSocketAddress;
 @ConditionalOnClass(Gb20999Client.class)
 @ConditionalOnProperty(prefix = "gb20999", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class Gb20999AutoConfiguration {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Gb20999AutoConfiguration.class);
 
     @Bean(initMethod = "start", destroyMethod = "close")
     @ConditionalOnClass(Gb20999Server.class)
@@ -40,7 +44,7 @@ public class Gb20999AutoConfiguration {
     @ConditionalOnMissingBean(Gb20999Client.class)
     public Gb20999Client gb20999Client(Gb20999Properties properties,
             ObjectProvider<Gb20999Server> embeddedServer) {
-        embeddedServer.ifAvailable(s -> { });
+        embeddedServer.getIfAvailable();
         Gb20999Properties.ClientProperties c = properties.getClient();
         Gb20999ClientConfig.Gb20999ClientConfigBuilder builder = Gb20999ClientConfig.builder()
                 .remoteAddress(new InetSocketAddress(c.getHost(), c.getPort()))
@@ -57,7 +61,11 @@ public class Gb20999AutoConfiguration {
             builder.vendorId(c.getVendorId());
         }
         Gb20999Client client = Gb20999Client.create(builder.build());
-        client.connect();
+        try {
+            client.connect();
+        } catch (Exception e) {
+            LOG.warn("GB20999 client connect failed on startup (will retry if auto-reconnect enabled): {}", e.getMessage());
+        }
         return client;
     }
 }
